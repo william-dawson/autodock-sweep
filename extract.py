@@ -36,8 +36,15 @@ if __name__ == "__main__":
         except StopIteration:
             continue
 
-    # Print out the results.
+    # Filter
+    results = []
     for lg, ene in energies.items():
         for i, val in enumerate(ene):
             if val < threshold:
-                print(lg, i, val)
+                results.append([lg.replace(".log", ""), i, val])
+
+    # Print
+    print("File\t"+"Index\t"+"Energy")
+    print("-----------------------")
+    for r in sorted(results, key=lambda x: x[0]):
+        print("\t".join([str(x) for x in r]))
