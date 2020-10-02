@@ -16,6 +16,7 @@ if __name__ == "__main__":
     from sweep.helper import get_parameters, get_energies
     from os.path import join
     from matplotlib import pyplot as plt
+    from warnings import warn
 
     # Read in the parameters.
     param = get_parameters(argv)
@@ -30,6 +31,10 @@ if __name__ == "__main__":
         try:
             energies += get_energies(lg)
         except StopIteration:
+            warn("Logfile appears to not be finished\t"+lg, UserWarning)
+            continue
+        except FileNotFoundError:
+            warn("Logfile not found\t"+lg, UserWarning)
             continue
 
     # Generate the plot
