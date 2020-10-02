@@ -20,7 +20,7 @@ def get_parameters(argv):
         param = load(ifile, Loader=SafeLoader)
 
     # Verify the input file.
-    for k in ["receptor", "ligand", "box_size", "cpu", "work_dir"]:
+    for k in ["receptor", "ligand", "box_size", "work_dir"]:
         if k not in param:
             raise Exception("Input file needs to contains " + k)
 

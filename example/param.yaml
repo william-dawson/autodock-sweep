@@ -6,4 +6,9 @@ box_size: [20, 20, 20]
 # The directory to put all the generated data.
 work_dir: example/work
 # Other parameters for vina.
-cpu: 4
+vina:
+  cpu: 4
+  seed: 0
+  exhaustiveness: 8
+  num_modes: 9
+  energy_range: 3

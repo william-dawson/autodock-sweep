@@ -36,8 +36,13 @@ ligand: ligand.pdbqt
 box_size: [20, 20, 20]
 # The directory to put all the generated data.
 work_dir: work
-# Other parameters for vina.
-cpu: 1
+# Other parameters for vina (optional).
+vina:
+  cpu: 1
+  seed: 0
+  exhaustiveness: 8
+  num_modes: 9
+  energy_range: 3
 ```
 
 This program automatically runs the `vina` command, and assumes that `vina`
