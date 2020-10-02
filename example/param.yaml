@@ -1,12 +1,9 @@
-# List the names of the files to consider.
-receptor: example/protein.pdb
-ligand: example/ligand.pdb
 # Vina requires pdbqt files
-receptor_qt: example/protein.pdbqt
-ligand_qt: example/ligand.pdbqt
+receptor: example/protein.pdbqt
+ligand: example/ligand.pdbqt
 # The size of the box to generate (x, y, z).
 box_size: [20, 20, 20]
 # The directory to put all the generated data.
 work_dir: example/work
 # Other parameters for vina.
-cpu: 1
+cpu: 4

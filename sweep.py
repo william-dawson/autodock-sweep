@@ -190,6 +190,10 @@ if __name__ == "__main__":
         files.append(f)
         logs.append(lg)
 
+    # Write the logfile names into a cache datastructure.
+    with open(join(param["work_dir"], "data.yaml"), "w") as ofile:
+        dump(logs, ofile)
+
     # Run autodock.
     for f, lg in zip(files, logs):
         if validate_log(lg):
@@ -197,7 +201,3 @@ if __name__ == "__main__":
         cmd = "cd " + param["work_dir"] + " ; vina --config " + basename(f)
         print(cmd)
         system(cmd)
-
-    # Write the logfiles into a cache datastructure.
-    with open(join(param["work_dir"], "data.yaml"), "w") as ofile:
-        dump(logs, ofile)
