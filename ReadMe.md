@@ -30,11 +30,8 @@ In each case we have passed a file `input.yaml` which includes the
 configuration you would like. This file might look like this:
 ```
 # List the names of the files to consider.
-receptor: protein.pdb
-ligand: ligand.pdb
-# Vina requires pdbqt files
-receptor_qt: protein.pdbqt
-ligand_qt: ligand.pdbqt
+receptor: protein.pdbqt
+ligand: ligand.pdbqt
 # The size of the box to generate (x, y, z).
 box_size: [20, 20, 20]
 # The directory to put all the generated data.

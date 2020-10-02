@@ -41,32 +41,6 @@ class Box:
                 self.zmin + self.zlen/2.0]
 
 
-def get_parameters():
-    """
-    Reads in the input parameters.
-    """
-    from sys import argv
-    from yaml import load, SafeLoader
-
-    # Get the input file name.
-    try:
-        infile = argv[1]
-    except IndexError:
-        raise Exception("Requires the input file as the first parameter.")
-
-    # Read.
-    with open(infile) as ifile:
-        param = load(ifile, Loader=SafeLoader)
-
-    # Verify the input file.
-    for k in ["receptor", "ligand", "receptor_qt", "ligand_qt", "box_size",
-              "cpu", "work_dir"]:
-        if k not in param:
-            raise Exception("Input file needs to contains " + k)
-
-    return param
-
-
 def get_box(fname):
     """
     Reads in a pdb file and creates a bounding box.
@@ -146,8 +120,8 @@ def generate(name, box, param):
         ofile.write("out = " + name + ".pdbqt\n")
         ofile.write("log = " + name + ".log\n")
 
-        ofile.write("receptor = " + basename(param["receptor_qt"]) + "\n")
-        ofile.write("ligand = " + basename(param["ligand_qt"]) + "\n")
+        ofile.write("receptor = " + basename(param["receptor"]) + "\n")
+        ofile.write("ligand = " + basename(param["ligand"]) + "\n")
 
         ofile.write("center_x = " + str(box.center[0]) + "\n")
         ofile.write("center_y = " + str(box.center[1]) + "\n")
@@ -160,14 +134,30 @@ def generate(name, box, param):
     return fname, lname
 
 
+def validate_log(fname):
+    """
+    Validates that a calculation has competed.
+    """
+    from os.path import exists
+    if not exists(fname):
+        return False
+    with open(fname) as ifile:
+        for line in ifile:
+            if "Writing output ... done." in line:
+                return True
+    return False
+
+
 if __name__ == "__main__":
+    from sys import argv
     from os.path import exists, join, basename
     from os import mkdir, system
     from shutil import copyfile
     from yaml import dump
+    from sweep.helper import get_parameters
 
     # Read in the parameters.
-    param = get_parameters()
+    param = get_parameters(argv)
 
     # Read boxes.
     protein_box = get_box(param["receptor"])
@@ -184,10 +174,10 @@ if __name__ == "__main__":
     # Copy the input geometries to the work directory.
     if not exists(join(param["work_dir"])):
         mkdir(param["work_dir"])
-    copyfile(param["receptor_qt"], join(param["work_dir"],
-             basename(param["receptor_qt"])))
-    copyfile(param["ligand_qt"], join(param["work_dir"],
-             basename(param["ligand_qt"])))
+    copyfile(param["receptor"], join(param["work_dir"],
+             basename(param["receptor"])))
+    copyfile(param["ligand"], join(param["work_dir"],
+             basename(param["ligand"])))
 
     # Create all the boxes we will generate.
     box_list = create_boxes(system_box, param["box_size"])
@@ -201,8 +191,12 @@ if __name__ == "__main__":
         logs.append(lg)
 
     # Run autodock.
-    for f in files:
-        system("cd " + param["work_dir"] + " ; vina --config " + f)
+    for f, lg in zip(files, logs):
+        if validate_log(lg):
+            continue
+        cmd = "cd " + param["work_dir"] + " ; vina --config " + basename(f)
+        print(cmd)
+        system(cmd)
 
     # Write the logfiles into a cache datastructure.
     with open(join(param["work_dir"], "data.yaml"), "w") as ofile:
