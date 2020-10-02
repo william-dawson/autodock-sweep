@@ -13,6 +13,10 @@ creates a plot of the scores generated. This will help you pick a cutoff
 for the final script `extract.py` which will extract all structures with
 scores above a desired threshold.
 
+This script uses a very naive algorithm of simply cutting up the unit cell
+into evenly spaced blocks. Half the dimension of each block in each direction
+is used as a buffer.
+
 ## Workflow
 
 Thus the typical workflow is:
@@ -31,7 +35,7 @@ ligand: ligand.pdb
 # Vina requires pdbqt files
 receptor_qt: protein.pdbqt
 ligand_qt: ligand.pdbqt
-# The size of the box to generate.
+# The size of the box to generate (x, y, z).
 box_size: [20, 20, 20]
 # The directory to put all the generated data.
 work_dir: work
@@ -39,3 +43,5 @@ work_dir: work
 cpu: 1
 ```
 
+This program automatically runs the `vina` command, and assumes that `vina`
+is on the path.

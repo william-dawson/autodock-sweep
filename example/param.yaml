@@ -4,7 +4,7 @@ ligand: example/ligand.pdb
 # Vina requires pdbqt files
 receptor_qt: example/protein.pdbqt
 ligand_qt: example/ligand.pdbqt
-# The size of the box to generate.
+# The size of the box to generate (x, y, z).
 box_size: [20, 20, 20]
 # The directory to put all the generated data.
 work_dir: example/work
